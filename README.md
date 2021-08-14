@@ -1,4 +1,6 @@
-Single station earthquake location through full waveform matching (demo code)
+# **Single station earthquake location through full waveform matching**
+
+A demo showing you how to locate earthquakes using a single station and waveform matching
 
 Please install SAC and F-K before you run this demo. GMT is required for plotting.
 
