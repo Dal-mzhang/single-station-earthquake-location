@@ -9,7 +9,7 @@ F-K: http://www.eas.slu.edu/People/LZhu/home.html
 GMT: https://www.generic-mapping-tools.org/download/
 
         
-Step 1. use a three-layer velocity to simulate full waveforms of an earthquake (synthetic event as ground truth, dep=0.7 km) at a near station (dist=7.15 km)
+Step 1. use a three-layer velocity model to simulate full waveforms of an earthquake (synthetic event as ground truth, dep=0.7 km) at a near station (dist=7.15 km)
 
 bash runFK.sh
 
