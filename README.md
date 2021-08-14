@@ -1,1 +1,0 @@
-# single-station-earthquake-location
