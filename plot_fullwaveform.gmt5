@@ -1,0 +1,188 @@
+#!/bin/bash
+dist=7.15
+dep=0.7
+tend=2.51
+#bandpass fiter from 3 to 15 hz to include both body wave and surface wave
+ls syn/model_EC_$dep/7.15.[r,t,z]| gawk '{print "cut t1 -0.5 2.51\nr",$1;print "rmean\nrtr\ntaper";print "bp c 3 15 n 2 p 2\n";print "w "$1"_bpv";}END{print "quit";}' | sac
+ls simulation/model_EC_*/${dist}.[r,t,z] | gawk '{print "cut t1 -0.5 2.51\nr",$1;print "rmean\nrtr\ntaper";print "bp c 3 15 n 2 p 2\n";print "w "$1"_bpv";}END{print "quit";}' | sac
+PS=FK_fullwaveform_$dep.ps
+#vertical plot 
+gmt pssac -JX2.5i/6.5i -R-0.5/$tend/-0.09/2.11 -En -M0.2i -T+t1 -C-0.5/$tend  -W1p -K -Ba1f0.2:"Time (s)":/a0.2f0.1:"Depth (km)":WSen << EOF > $PS 
+./simulation/model_EC_0.01/${dist}.z_bpv -0.5  0.01
+./simulation/model_EC_0.1/${dist}.z_bpv -0.5  0.1
+./simulation/model_EC_0.2/${dist}.z_bpv -0.5  0.2
+./simulation/model_EC_0.3/${dist}.z_bpv -0.5  0.3
+./simulation/model_EC_0.4/${dist}.z_bpv -0.5  0.4
+./simulation/model_EC_0.5/${dist}.z_bpv -0.5  0.5
+./simulation/model_EC_0.6/${dist}.z_bpv -0.5  0.6
+./simulation/model_EC_0.7/${dist}.z_bpv -0.5 0.7
+./simulation/model_EC_0.8/${dist}.z_bpv -0.5  0.8
+./simulation/model_EC_0.9/${dist}.z_bpv -0.5  0.9
+./simulation/model_EC_1/${dist}.z_bpv -0.5  1.0
+./simulation/model_EC_1.1/${dist}.z_bpv -0.5  1.1
+./simulation/model_EC_1.2/${dist}.z_bpv -0.5  1.2
+./simulation/model_EC_1.3/${dist}.z_bpv -0.5  1.3
+./simulation/model_EC_1.4/${dist}.z_bpv -0.5  1.4
+./simulation/model_EC_1.5/${dist}.z_bpv -0.5  1.5
+./simulation/model_EC_1.6/${dist}.z_bpv -0.5  1.6
+./simulation/model_EC_1.7/${dist}.z_bpv -0.5  1.7
+./simulation/model_EC_1.8/${dist}.z_bpv -0.5  1.8
+./simulation/model_EC_1.9/${dist}.z_bpv -0.5  1.9
+./simulation/model_EC_2/${dist}.z_bpv -0.5  2.0
+EOF
+gmt pssac -JX -R -T+t1 -W0.8p,darkgray -M0.2i -O -K << EOF >> $PS 
+syn/model_EC_$dep/7.15.z_bpv -0.50 0.01
+syn/model_EC_$dep/7.15.z_bpv -0.50 0.1
+syn/model_EC_$dep/7.15.z_bpv -0.50 0.2
+syn/model_EC_$dep/7.15.z_bpv -0.50 0.3
+syn/model_EC_$dep/7.15.z_bpv -0.50 0.4
+syn/model_EC_$dep/7.15.z_bpv -0.50 0.5
+syn/model_EC_$dep/7.15.z_bpv -0.50 0.6
+syn/model_EC_$dep/7.15.z_bpv -0.50 0.7
+syn/model_EC_$dep/7.15.z_bpv -0.50 0.8
+syn/model_EC_$dep/7.15.z_bpv -0.50 0.9
+syn/model_EC_$dep/7.15.z_bpv -0.50 1.0
+syn/model_EC_$dep/7.15.z_bpv -0.50 1.1
+syn/model_EC_$dep/7.15.z_bpv -0.50 1.2
+syn/model_EC_$dep/7.15.z_bpv -0.50 1.3
+syn/model_EC_$dep/7.15.z_bpv -0.50 1.4
+syn/model_EC_$dep/7.15.z_bpv -0.50 1.5
+syn/model_EC_$dep/7.15.z_bpv -0.50 1.6
+syn/model_EC_$dep/7.15.z_bpv -0.50 1.7
+syn/model_EC_$dep/7.15.z_bpv -0.50 1.8
+syn/model_EC_$dep/7.15.z_bpv -0.50 1.9
+syn/model_EC_$dep/7.15.z_bpv -0.50 2.0
+EOF
+gmt pssac -JX -R -T+t1 -W1p,red -M0.2i -O -K << EOF >> $PS 
+syn/model_EC_$dep/7.15.z_bpv -0.50 $dep
+EOF
+
+gmt psxy -JX -R -Wthin,black,-- -O -K << EOF >> $PS 
+0.0 -0.2
+0.0 2.2
+EOF
+
+gmt pstext -F+f12p -JX -R -Nr -O -K << EOF >> $PS 
+1 2.17 Vertical
+EOF
+
+#gmt pstext -F+f18p -JX -R -Nr -O -K << EFX >> $PS 
+#-0.92 2.15 (a)
+#EFX
+#radial plot (strike-dip-slip)
+gmt pssac -JX -R-0.5/$tend/-0.09/2.11 -T+t1 -M0.2i -W1p -O -K -Ba1f0.2:"Time (s)":/a0.2f0.1wSen -X2.7i << EOF >> $PS 
+./simulation/model_EC_0.01/${dist}.r_bpv -0.5  0.01
+./simulation/model_EC_0.1/${dist}.r_bpv -0.5  0.1
+./simulation/model_EC_0.2/${dist}.r_bpv -0.5  0.2
+./simulation/model_EC_0.3/${dist}.r_bpv -0.5  0.3
+./simulation/model_EC_0.4/${dist}.r_bpv -0.5  0.4
+./simulation/model_EC_0.5/${dist}.r_bpv -0.5  0.5
+./simulation/model_EC_0.6/${dist}.r_bpv -0.5  0.6
+./simulation/model_EC_0.7/${dist}.r_bpv -0.5 0.7
+./simulation/model_EC_0.8/${dist}.r_bpv -0.5  0.8
+./simulation/model_EC_0.9/${dist}.r_bpv -0.5  0.9
+./simulation/model_EC_1/${dist}.r_bpv -0.5  1.0
+./simulation/model_EC_1.1/${dist}.r_bpv -0.5  1.1
+./simulation/model_EC_1.2/${dist}.r_bpv -0.5  1.2
+./simulation/model_EC_1.3/${dist}.r_bpv -0.5  1.3
+./simulation/model_EC_1.4/${dist}.r_bpv -0.5  1.4
+./simulation/model_EC_1.5/${dist}.r_bpv -0.5  1.5
+./simulation/model_EC_1.6/${dist}.r_bpv -0.5  1.6
+./simulation/model_EC_1.7/${dist}.r_bpv -0.5  1.7
+./simulation/model_EC_1.8/${dist}.r_bpv -0.5  1.8
+./simulation/model_EC_1.9/${dist}.r_bpv -0.5  1.9
+./simulation/model_EC_2/${dist}.r_bpv -0.5  2.0
+EOF
+gmt pssac -JX -R -T+t1 -W0.8p,darkgray -M0.2i -O -K << EOF >> $PS 
+syn/model_EC_$dep/7.15.r_bpv -0.50 0.01
+syn/model_EC_$dep/7.15.r_bpv -0.50 0.1
+syn/model_EC_$dep/7.15.r_bpv -0.50 0.2
+syn/model_EC_$dep/7.15.r_bpv -0.50 0.3
+syn/model_EC_$dep/7.15.r_bpv -0.50 0.4
+syn/model_EC_$dep/7.15.r_bpv -0.50 0.5
+syn/model_EC_$dep/7.15.r_bpv -0.50 0.6
+syn/model_EC_$dep/7.15.r_bpv -0.50 0.7
+syn/model_EC_$dep/7.15.r_bpv -0.50 0.8
+syn/model_EC_$dep/7.15.r_bpv -0.50 0.9
+syn/model_EC_$dep/7.15.r_bpv -0.50 1.0
+syn/model_EC_$dep/7.15.r_bpv -0.50 1.1
+syn/model_EC_$dep/7.15.r_bpv -0.50 1.2
+syn/model_EC_$dep/7.15.r_bpv -0.50 1.3
+syn/model_EC_$dep/7.15.r_bpv -0.50 1.4
+syn/model_EC_$dep/7.15.r_bpv -0.50 1.5
+syn/model_EC_$dep/7.15.r_bpv -0.50 1.6
+syn/model_EC_$dep/7.15.r_bpv -0.50 1.7
+syn/model_EC_$dep/7.15.r_bpv -0.50 1.8
+syn/model_EC_$dep/7.15.r_bpv -0.50 1.9
+syn/model_EC_$dep/7.15.r_bpv -0.50 2.0
+EOF
+gmt pssac -JX -R -T+t1 -W1p,red -M0.2i -O -K << EOF >> $PS 
+syn/model_EC_$dep/7.15.r_bpv -0.50 $dep
+EOF
+gmt psxy -JX -R -Wthin,black,-- -O -K << EOF >> $PS 
+0.0 -0.2
+0.0 2.2
+EOF
+gmt pstext -F+f12p -JX -R -Nr -O -K << EOF >> $PS 
+1 2.17 Radial
+EOF
+#Tran plot (strike-dip-slip)
+gmt pssac -JX -R-0.5/$tend/-0.09/2.11 -T+t1 -W1p -M0.2i -O -K -Ba1f0.2:"Time (s)":/a0.2f0.1wSen -X2.7i << EOF >> $PS 
+./simulation/model_EC_0.01/${dist}.t_bpv -0.5  0.01
+./simulation/model_EC_0.1/${dist}.t_bpv -0.5  0.1
+./simulation/model_EC_0.2/${dist}.t_bpv -0.5  0.2
+./simulation/model_EC_0.3/${dist}.t_bpv -0.5  0.3
+./simulation/model_EC_0.4/${dist}.t_bpv -0.5  0.4
+./simulation/model_EC_0.5/${dist}.t_bpv -0.5  0.5
+./simulation/model_EC_0.6/${dist}.t_bpv -0.5  0.6
+./simulation/model_EC_0.7/${dist}.t_bpv -0.5  0.7
+./simulation/model_EC_0.8/${dist}.t_bpv -0.5  0.8
+./simulation/model_EC_0.9/${dist}.t_bpv -0.5  0.9
+./simulation/model_EC_1/${dist}.t_bpv -0.5  1.0
+./simulation/model_EC_1.1/${dist}.t_bpv -0.5  1.1
+./simulation/model_EC_1.2/${dist}.t_bpv -0.5  1.2
+./simulation/model_EC_1.3/${dist}.t_bpv -0.5  1.3
+./simulation/model_EC_1.4/${dist}.t_bpv -0.5  1.4
+./simulation/model_EC_1.5/${dist}.t_bpv -0.5  1.5
+./simulation/model_EC_1.6/${dist}.t_bpv -0.5  1.6
+./simulation/model_EC_1.7/${dist}.t_bpv -0.5  1.7
+./simulation/model_EC_1.8/${dist}.t_bpv -0.5  1.8
+./simulation/model_EC_1.9/${dist}.t_bpv -0.5  1.9
+./simulation/model_EC_2/${dist}.t_bpv -0.5  2.0
+EOF
+gmt pssac -JX -R -T+t1 -W0.8p,darkgray -M0.2i -O -K << EOF >> $PS 
+syn/model_EC_$dep/7.15.t_bpv -0.50 0.01
+syn/model_EC_$dep/7.15.t_bpv -0.50 0.1
+syn/model_EC_$dep/7.15.t_bpv -0.50 0.2
+syn/model_EC_$dep/7.15.t_bpv -0.50 0.3
+syn/model_EC_$dep/7.15.t_bpv -0.50 0.4
+syn/model_EC_$dep/7.15.t_bpv -0.50 0.5
+syn/model_EC_$dep/7.15.t_bpv -0.50 0.6
+syn/model_EC_$dep/7.15.t_bpv -0.50 0.7
+syn/model_EC_$dep/7.15.t_bpv -0.50 0.8
+syn/model_EC_$dep/7.15.t_bpv -0.50 0.9
+syn/model_EC_$dep/7.15.t_bpv -0.50 1.0
+syn/model_EC_$dep/7.15.t_bpv -0.50 1.1
+syn/model_EC_$dep/7.15.t_bpv -0.50 1.2
+syn/model_EC_$dep/7.15.t_bpv -0.50 1.3
+syn/model_EC_$dep/7.15.t_bpv -0.50 1.4
+syn/model_EC_$dep/7.15.t_bpv -0.50 1.5
+syn/model_EC_$dep/7.15.t_bpv -0.50 1.6
+syn/model_EC_$dep/7.15.t_bpv -0.50 1.7
+syn/model_EC_$dep/7.15.t_bpv -0.50 1.8
+syn/model_EC_$dep/7.15.t_bpv -0.50 1.9
+syn/model_EC_$dep/7.15.t_bpv -0.50 2.0
+EOF
+gmt pssac -JX -R -T+t1 -W1p,red -M0.2i -O -K << EOF >> $PS 
+syn/model_EC_$dep/7.15.t_bpv -0.50 $dep
+EOF
+gmt psxy -JX -R -Wthin,black,-- -O -K << EOF >> $PS 
+0.0 -0.2
+0.0 2.2
+EOF
+gmt pstext -F+f12p -JX -R -Nr -O -K << EOF >> $PS 
+1 2.17 Tangential
+EOF
+gmt psxy /dev/null -JX -R -O >> $PS
+gmt psconvert $PS -Tj -P -E300 -A
+rm $PS gmt.* 

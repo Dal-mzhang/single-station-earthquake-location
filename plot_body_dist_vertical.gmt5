@@ -1,0 +1,41 @@
+#!/bin/bash
+tend=1.11
+dep=0.7
+#bandpass filter from 5 to 15 hz to focus on body waves
+ls syn/model_EC_0.7/7.15.[r,t,z] | gawk '{print "cut t1 -0.4 1.31\nr",$1;print "rmean\nrtr\ntaper";print "bp c 5 15 n 2 p 1\n";print "w "$1"_bpv";}END{print "quit";}' | sac
+
+ls simulation/model_EC_$dep/*.[r,t,z] | gawk '{print "cut t1 -0.4 1.31\nr",$1;print "rmean\nrtr\ntaper";print "bp c 5 15 n 2 p 1\n";print "w "$1"_bpv";}END{print "quit";}' | sac
+PS=FK_bodywave_simulation_v.ps
+gmt pssac -JX4i/4i -R-0.2/$tend/7/7.35 -En -M0.3i -T+t1 -C-0.4/1.31  -W1p -K -Ba0.2f0.1:"Time (s)":/a0.05f0.05:"Distance (km)":WSen << EOF > $PS 
+simulation/model_EC_$dep/7.05.z_bpv -0.4  7.05
+simulation/model_EC_$dep/7.1.z_bpv -0.4  7.1
+simulation/model_EC_$dep/7.15.z_bpv -0.4  7.15
+simulation/model_EC_$dep/7.2.z_bpv -0.4  7.2
+simulation/model_EC_$dep/7.25.z_bpv -0.4 7.25
+simulation/model_EC_$dep/7.3.z_bpv -0.4  7.3
+EOF
+gmt pssac -JX -R -T+t1 -W0.8p,darkgray -M0.3i -O -K << EOF >> $PS 
+syn/model_EC_0.7/7.15.z_bpv -0.4 7.05
+syn/model_EC_0.7/7.15.z_bpv -0.4 7.1
+syn/model_EC_0.7/7.15.z_bpv -0.4 7.15
+syn/model_EC_0.7/7.15.z_bpv -0.4 7.2
+syn/model_EC_0.7/7.15.z_bpv -0.4 7.25
+syn/model_EC_0.7/7.15.z_bpv -0.4 7.3
+EOF
+
+gmt pssac -JX -R -T+t1 -W1p,red -M0.3i -O -K << EOF >> $PS 
+syn/model_EC_0.7/7.15.z_bpv -0.4 7.15
+EOF
+
+gmt psxy -JX -R -Wthin,black,-- -O -K << EOF >> $PS 
+0.0 7.0
+0.0 7.4
+EOF
+
+#gmt pstext -F+f12p -JX -R -Nr -O -K << EOF >> $PS
+#0.45 7.37 Vertical
+#EOF
+
+gmt psxy /dev/null -JX -R -O >> $PS
+gmt psconvert $PS -Tj -P -E300 -A
+rm $PS gmt.*
