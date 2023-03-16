@@ -8,4 +8,7 @@ stk=0
 dip=90
 rak=90
 
+#Trapezoidal source time function, for a complex rupture process
 gawk -v stk=$stk -v dip=$dip -v rak=$rak 'BEGIN {for (i=0.7;i<=0.7;i=i+0.1){for (j=7.15;j<=7.15;j=j+0.05){print "syn -M3/"stk"/"dip"/"rak" -D0.10/0.05 -A197.15 -Omodel_EC_"i"/"j".z -Gmodel_EC_"i"/"j".grn.0";}}}' | sh
+#Triangular source time function, for a simple rupture process, which is more popular
+#gawk -v stk=$stk -v dip=$dip -v rak=$rak 'BEGIN {for (i=0.7;i<=0.7;i=i+0.1){for (j=7.15;j<=7.15;j=j+0.05){print "syn -M3/"stk"/"dip"/"rak" -D0.10/0.5 -A197.15 -Omodel_EC_"i"/"j".z -Gmodel_EC_"i"/"j".grn.0";}}}' | sh
